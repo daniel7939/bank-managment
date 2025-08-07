@@ -1,0 +1,192 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+class Customer {
+private:
+ string name;
+ string address;
+public:
+ Customer(const string& name, const string& address)
+ : name(name), address(address) {}
+ string getName() const {
+ return name;
+ }
+ string getAddress() const {
+ return address;
+ }
+};
+class Account {
+private:
+ int accountNumber;
+ Customer customer;
+ double balance;
+ string password;
+public:
+ Account(int accountNumber, const Customer& customer, const string& password)
+ : accountNumber(accountNumber), customer(customer), balance(0.0), password(password) {}
+ int getAccountNumber() const {
+ return accountNumber;
+ }
+ double getBalance() const {
+ return balance;
+ }
+ bool verifyPassword(const string& inputPassword) const {
+ return password == inputPassword;
+ }
+ void deposit(double amount) {
+ balance += amount;
+ }
+ void withdraw(double amount) {
+ if (balance >= amount) {
+ balance -= amount;
+ } else {
+ cout << "Insufficient funds" << endl;
+ }
+ }
+ void display() const {
+ cout << "Account Number: " << accountNumber << endl;
+ cout << "Customer Name: " << customer.getName() << endl;
+ cout << "Customer Address: " << customer.getAddress() << endl;
+ cout << "Balance: " << balance << endl;
+ }
+};
+class Bank {
+private:
+ vector<Account> accounts;
+public:
+ void createAccount(int accountNumber, const Customer& customer, const string& password) {
+ Account newAccount(accountNumber, customer, password);
+ accounts.push_back(newAccount);
+ cout << "Account created successfully" << endl;
+ }
+ Account* findAccount(int accountNumber) {
+ for (auto& account : accounts) {
+ if (account.getAccountNumber() == accountNumber) {
+ return &account;
+ }
+ }
+ return nullptr;
+ }
+ void displayAccountDetails(int accountNumber) {
+ Account* account = findAccount(accountNumber);
+ if (account != nullptr) {
+ account->display();
+ } else {
+ cout << "Account not found" << endl;
+ }
+ }
+};
+int main() {
+         string username;
+  string password;
+
+
+    cout<<"             # BANK MANAGMENT  SYSTEM #"<<endl;
+    cout<<endl;
+  cout<<"ENTER USER NAME  ";
+  cin>>username;
+  cout<<"ENTER PASSWORD  ";
+  cin>>password;
+
+  if(username == "CBE"){
+       if(password == "2016"){
+        cout<<"LOGIN IS SUCCESSFULL"<<endl;
+        cout<<"        |       Welcome to BANK MANAGMENT SYSTEM        |"<<endl;
+
+        cout<<endl;
+ Bank bank;
+ while (true) {
+ cout << "1. Create Account" << endl;
+ cout << "2. Deposit Money" << endl;
+ cout << "3. Withdraw Money" << endl;
+ cout << "4. Display Account Details" << endl;
+ cout << "5. Exit" << endl;
+ cout << "Enter your choice: ";
+ int choice;
+ cin >> choice;
+ switch (choice) {
+ case 1: {
+ string name, address, password;
+ int accountNumber;
+ cout << "Enter customer name: ";
+ cin >> name;
+ cout << "Enter customer address: ";
+ cin >> address;
+ cout << "Enter account number: ";
+ cin >> accountNumber;
+ cout << "Set account password: ";
+ cin >> password;
+ Customer newCustomer(name, address);
+ bank.createAccount(accountNumber, newCustomer, password);
+ break;
+ }
+ case 2: {
+ int accountNumber;
+ double amount;
+ string password;
+ cout << "Enter account number: ";
+ cin >> accountNumber;
+ cout << "Enter account password: ";
+ cin >> password;
+ Account* account = bank.findAccount(accountNumber);
+ if (account != nullptr && account->verifyPassword(password)) {
+ cout << "Enter amount to deposit: ";
+ cin >> amount;
+ account->deposit(amount);
+ cout << "Deposit successful" << endl;
+ } else {
+ cout << "Account not found or incorrect password" << endl;
+ }
+ break;
+ }
+ case 3: {
+ int accountNumber;
+ double amount;
+ string password;
+ cout << "Enter account number: ";
+ cin >> accountNumber;
+ cout << "Enter account password: ";
+ cin >> password;
+ Account* account = bank.findAccount(accountNumber);
+ if (account != nullptr && account->verifyPassword(password)) {
+ cout << "Enter amount to withdraw: ";
+ cin >> amount;
+ account->withdraw(amount);
+ } else {
+ cout << "Account not found or incorrect password" << endl;
+ }
+ break;
+ }
+ case 4: {
+ int accountNumber;
+ string password;
+ cout << "Enter account number: ";
+ cin >> accountNumber;
+ cout << "Enter account password: ";
+ cin >> password;
+ Account* account = bank.findAccount(accountNumber);
+ if (account != nullptr && account->verifyPassword(password)) {
+ bank.displayAccountDetails(accountNumber);
+ } else {
+ cout << "Account not found or incorrect password" << endl;
+ }
+ break;
+ }
+ case 5:
+ return 0;
+ default:
+ cout << "Invalid choice" << endl;
+ }
+ }
+
+// IF LOGIN IS INVALID
+      cout<<endl;
+      cout<<endl;
+       } else{
+          cout<<"INVALLID PASSWORD TRY AGAIN"<<endl;
+       }
+       }else{
+          cout<<"INVALID USERNAME"<<endl;
+       }
+ return 0;
+}
